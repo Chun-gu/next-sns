@@ -1,5 +1,8 @@
+import Link from "next/link";
+
 import { AuthProvider } from "@/components/auth";
 import { Header } from "@/components/header";
+import { LinkToCreatePost } from "@/components/post";
 import { getCurrentUser } from "@/features/auth";
 
 import type { Metadata } from "next";
@@ -23,11 +26,33 @@ export default async function PrivateLayout({
 
 	return (
 		<AuthProvider user={user}>
-			<Header />
-			<main>
-				{children}
-				{/* {modal} */}
-			</main>
+			<div className="flex flex-col md:grid md:grid-cols-[1fr_2fr_1fr] min-h-screen">
+				<Header className="bg-white p-4 outline" />
+
+				<div className="flex flex-col grow">
+					<header className="hidden outline max-h-screen">Left Header</header>
+					<main className="relative grow">
+						<nav className="outline">
+							<ul className="flex">
+								<li key="posts">
+									<Link href="/posts">새 게시글</Link>
+								</li>
+								<li key="feeds">
+									<Link href="/feeds">팔로우 중</Link>
+								</li>
+							</ul>
+						</nav>
+						{children}
+						{/* {modal} */}
+						<LinkToCreatePost />
+					</main>
+					<aside className="hidden outline bg-red-100 max-h-screen">
+						Right Aside
+					</aside>
+				</div>
+			</div>
+
+			<footer className="outline p-4">Footer</footer>
 		</AuthProvider>
 	);
 }

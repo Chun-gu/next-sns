@@ -1,7 +1,6 @@
 import {
 	doc,
 	addDoc,
-	getDoc,
 	getDocs,
 	updateDoc,
 	deleteDoc,
@@ -11,79 +10,108 @@ import {
 	serverTimestamp,
 } from "firebase/firestore";
 
+import { GetCommentResDTO } from "@/resources/comment";
 import { firebaseDB } from "@/shared/config/firebase";
 
-import type { Comment } from "@/resources/comment";
+import { getUserById, userDocRef } from "./user";
+
+import type { Comment, GetCommentRes } from "@/resources/comment";
 import type { Post } from "@/resources/post";
 import type { User } from "@/resources/user";
 
 // #MARK: createComment
-export async function createComment(
-	postId: Post["id"],
-	userId: User["id"],
-	content: Comment["content"],
-): Promise<Comment["id"]> {
-	const comment = {
-		author: userId,
-		content,
-		createdAt: serverTimestamp(),
-	};
+// POST /posts/post-id/comments
+type CreateCommentParam = {
+	userId: User["id"];
+	postId: Post["id"];
+	content: Comment["content"];
+};
+class CreateCommentReqDTO {
+	constructor(private param: CreateCommentParam) {}
 
-	const commentDocRef = await addDoc(commentCollection(postId), comment);
-
-	return commentDocRef.id;
+	toPlainObj() {
+		return {
+			author: userDocRef(this.param.userId),
+			postId: this.param.postId,
+			content: this.param.content,
+			createdAt: serverTimestamp(),
+			updatedAt: null,
+		};
+	}
 }
 
-// MARK: getCommentById
-export async function getCommentById(
-	postId: Post["id"],
-	commentd: Comment["id"],
-): Promise<Comment | null> {
-	const commentDoc = await getDoc(commentDocRef(postId, commentd));
+export async function createComment(
+	param: CreateCommentParam,
+): Promise<Comment["id"]> {
+	const comment = await addDoc(
+		commentColRef(param.postId),
+		new CreateCommentReqDTO(param).toPlainObj(),
+	);
 
-	if (commentDoc.exists() === false) return null;
-
-	const comment = commentDoc.data();
-
-	return {
-		id: commentDoc.id,
-		...comment,
-		createdAt: comment.createdAt.toDate(),
-		updatedAt: comment.updatedAt.toDate(),
-	} as Comment;
+	return comment.id;
 }
 
 // MARK: getCommentsByPostId
+// GET /posts/post-id/comments
 export async function getCommentsByPostId(
 	postId: Post["id"],
 ): Promise<Comment[]> {
-	const q = query(commentCollection(postId), orderBy("createdAt", "desc"));
-	const commentDocs = await getDocs(q);
+	const commentsQuery = query(
+		commentColRef(postId),
+		orderBy("createdAt", "desc"),
+	);
 
-	return commentDocs.docs.map(
-		(doc) =>
-			({
+	const promisedComments = (await getDocs(commentsQuery)).docs.map(
+		async (doc) => {
+			const comment = doc.data() as GetCommentRes;
+			const author = await getUserById(comment.author.id);
+
+			return {
 				id: doc.id,
-				...doc.data(),
-				createdAt: doc.data().createdAt.toDate(),
-				updatedAt: doc.data().updatedAt.toDate(),
-			}) as Comment,
+				...comment,
+				author,
+				createdAt: comment.createdAt.toDate(),
+				updatedAt: comment.updatedAt?.toDate() ?? null,
+			};
+		},
+	);
+
+	const comments = Promise.allSettled(promisedComments).then((results) =>
+		results
+			.filter((result) => result.status === "fulfilled")
+			.map((result) => result.value),
+	);
+
+	// return new GetCommentResDTO(comments).
+	return comments;
+}
+
+type UpdateCommentParam = {
+	postId: Post["id"];
+	commentId: Comment["id"];
+	content: Comment["content"];
+};
+class UpdateCommentReqDTO {
+	constructor(private param: UpdateCommentParam) {}
+
+	toPlainObj() {
+		return {
+			content: this.param.content,
+			updatedAt: serverTimestamp(),
+		};
+	}
+}
+// MARK: updateComment
+// PATCH /posts/post-id/comments/comment-id
+export async function updateComment(param: UpdateCommentParam): Promise<void> {
+	await updateDoc(
+		commentDocRef(param.postId, param.commentId),
+		new UpdateCommentReqDTO(param).toPlainObj(),
 	);
 }
 
-// MARK: updateComment
-export async function updateComment(
-	postId: Post["id"],
-	commentId: Comment["id"],
-	content: Comment["content"],
-): Promise<void> {
-	await updateDoc(commentDocRef(postId, commentId), {
-		content,
-		updatedAt: serverTimestamp(),
-	});
-}
-
 // MARK:deleteComment
+// DELETE /posts/post-id/comments/comment-id
 export async function deleteComment(
 	postId: Post["id"],
 	commentId: Comment["id"],
@@ -91,7 +119,7 @@ export async function deleteComment(
 	await deleteDoc(commentDocRef(postId, commentId));
 }
 
-function commentCollection(postId: Post["id"]) {
+function commentColRef(postId: Post["id"]) {
 	return collection(firebaseDB, "post", postId, "comment");
 }
 

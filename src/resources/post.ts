@@ -1,8 +1,6 @@
 import { arrayUnion, serverTimestamp } from "firebase/firestore";
 import { v7 as uuid } from "uuid";
 
-import { formatDateByLocale } from "@/shared/lib/date";
-
 import type { Timestamp } from "firebase/firestore";
 import type { ImageName } from "@/features/image";
 import type { User } from "./user";
@@ -16,34 +14,26 @@ export interface Post {
 	comments: Array<Comment>;
 	commentCount: number;
 	likeCount: number;
-	createdAt: string;
-	updatedAt: string | null;
+	createdAt: Date;
+	updatedAt: Date | null;
 }
 
-export type CreatePostArg = Pick<
-	Post,
-	"title" | "content" | "attachedImageNames"
-> & { authorId: User["id"] };
-
-export type UpdatePostArg = { postId: Post["id"] } & Partial<
-	Pick<Post, "title" | "content" | "attachedImageNames">
->;
-
-export interface PostRes extends Omit<Post, "createdAt" | "updatedAt"> {
-	createdAt: Timestamp;
-	updatedAt: Timestamp | null;
+// MARK: Create Post
+export interface CreatePostParam
+	extends Pick<Post, "title" | "content" | "attachedImageNames"> {
+	authorId: User["id"];
 }
 
-export class CreatePostDTO {
-	constructor(private post: CreatePostArg) {}
+export class CreatePostReqDTO {
+	constructor(private readonly param: CreatePostParam) {}
 
 	toPlainObj() {
 		return {
 			id: uuid(),
-			author: this.post.authorId,
-			title: this.post.title,
-			content: this.post.title,
-			attachedImageNames: arrayUnion(...this.post.attachedImageNames),
+			author: this.param.authorId,
+			title: this.param.title,
+			content: this.param.content,
+			attachedImageNames: arrayUnion(...this.param.attachedImageNames),
 			comments: arrayUnion(),
 			commentCount: 0,
 			likeCount: 0,
@@ -53,34 +43,45 @@ export class CreatePostDTO {
 	}
 }
 
-export class GetPostDTO {
-	constructor(private post: PostRes) {}
+// MARK: Get Post
+export interface GetPostRes extends Omit<Post, "createdAt" | "updatedAt"> {
+	createdAt: Timestamp;
+	updatedAt: Timestamp | null;
+}
 
-	toPlainObj(): Post {
+export class GetPostResDTO {
+	constructor(private readonly res: GetPostRes) {}
+
+	toPlainObj() {
 		return {
-			id: this.post.id,
-			author: this.post.author,
-			title: this.post.title,
-			content: this.post.content,
-			attachedImageNames: this.post.attachedImageNames ?? [],
-			comments: this.post.comments ?? [],
-			commentCount: this.post.commentCount ?? 0,
-			likeCount: this.post.likeCount ?? 0,
-			createdAt: formatDateByLocale(this.post.createdAt.toDate()),
-			updatedAt:
-				this.post.updatedAt && formatDateByLocale(this.post.updatedAt.toDate()),
+			id: this.res.id,
+			author: this.res.author,
+			title: this.res.title,
+			content: this.res.content,
+			attachedImageNames: this.res.attachedImageNames ?? [],
+			comments: this.res.comments ?? [],
+			commentCount: this.res.commentCount ?? 0,
+			likeCount: this.res.likeCount ?? 0,
+			createdAt: this.res.createdAt.toDate(),
+			updatedAt: this.res.updatedAt?.toDate() ?? null,
 		};
 	}
 }
 
-export class UpdatePostDTO {
-	constructor(private post: UpdatePostArg) {}
+// MARK: Update Post
+export interface UpdatePostParam
+	extends Partial<Pick<Post, "title" | "content" | "attachedImageNames">> {
+	postId: Post["id"];
+}
+
+export class UpdatePostReqDTO {
+	constructor(private readonly param: UpdatePostParam) {}
 
 	toPlainObj() {
 		return {
-			title: this.post.title,
-			content: this.post.title,
-			attachedImageNames: arrayUnion(...(this.post.attachedImageNames ?? [])),
+			title: this.param.title,
+			content: this.param.content,
+			attachedImageNames: arrayUnion(...(this.param.attachedImageNames ?? [])),
 			updatedAt: serverTimestamp(),
 		};
 	}

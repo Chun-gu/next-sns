@@ -13,5 +13,9 @@ export function SignOutButton() {
 		router.refresh();
 	}
 
-	return <button onClick={onClickSignOutButton}>로그아웃</button>;
+	return (
+		<button onClick={onClickSignOutButton} className="cursor-pointer">
+			로그아웃
+		</button>
+	);
 }

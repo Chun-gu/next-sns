@@ -8,7 +8,7 @@ import { createImage } from "@/features/image";
 import { createUser } from "@/features/user";
 
 import type { FormEvent } from "react";
-import type { CreateUserArg } from "@/resources/user";
+import type { CreateUserParam } from "@/resources/user";
 
 export function SignUpForm() {
 	const router = useRouter();
@@ -30,7 +30,7 @@ export function SignUpForm() {
 			} = await signUpWithEmail(email, password);
 			const profileImageName = await createImage(profileImage);
 
-			const user: CreateUserArg = {
+			const user: CreateUserParam = {
 				id: uid,
 				email,
 				nickname,

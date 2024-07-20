@@ -1,9 +1,7 @@
 import {
-	addDoc,
 	getDoc,
 	getDocs,
 	setDoc,
-	updateDoc,
 	collection,
 	doc,
 	query,
@@ -12,14 +10,19 @@ import {
 } from "firebase/firestore";
 
 import { firebaseDB } from "@/shared/config/firebase";
-import { formatDateByLocale } from "@/shared/lib/date";
 
-import type { CreateUserArg, GetUserRes, User } from "@/resources/user";
+import {
+	GetUserResDTO,
+	type CreateUserParam,
+	type GetUserRes,
+	type User,
+} from "@/resources/user";
 
+// MARK: Create User
 export async function createUser({
 	id,
 	...user
-}: CreateUserArg): Promise<void> {
+}: CreateUserParam): Promise<void> {
 	await setDoc(userDocRef(id), {
 		...user,
 		createdAt: serverTimestamp(),
@@ -27,21 +30,21 @@ export async function createUser({
 	});
 }
 
+// MARK: Get User By Id
 export async function getUserById(id: User["id"]): Promise<User> {
 	const userDoc = await getDoc(userDocRef(id));
 
 	if (userDoc.exists() === false) throw new Error();
 
-	const user = userDoc.data() as GetUserRes;
+	const userRes = userDoc.data() as GetUserRes;
 
 	return {
 		id,
-		...user,
-		createdAt: formatDateByLocale(user.createdAt.toDate()),
-		updatedAt: formatDateByLocale(user.updatedAt.toDate()),
+		...new GetUserResDTO(userRes).toPlainObj(),
 	};
 }
 
+// MARK: Get User By Nickname
 export async function getUserByNickname(
 	nickname: User["nickname"],
 ): Promise<User> {

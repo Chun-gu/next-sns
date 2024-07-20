@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { createPost, updatePost } from "@/features/post";
+import { createPost } from "@/features/post";
 import { revalidatePath } from "@/shared/lib/action";
 
 // import { ImageUploadPreview } from "../image/image-upload-preview";
@@ -16,10 +16,8 @@ type PostFormProps = {
 	initialPostData?: Post;
 };
 
-export function PostForm({ userId, initialPostData }: PostFormProps) {
+export function PostCreateForm({ userId, initialPostData }: PostFormProps) {
 	const router = useRouter();
-
-	const isEdit = initialPostData !== undefined;
 
 	async function handleSubmitPostForm(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -31,24 +29,11 @@ export function PostForm({ userId, initialPostData }: PostFormProps) {
 		const postImages = formData.getAll("postImage") as Array<File>;
 		const attachedImageNames = [] as Array<string>;
 
-		if (isEdit) {
-			const post = {
-				postId: initialPostData.id,
-				title,
-				content,
-				attachedImageNames,
-			};
-			await updatePost(post);
+		const post = { authorId: userId, title, content, attachedImageNames };
+		const postId = await createPost(post);
 
-			revalidatePath(`/posts/${initialPostData.id}`);
-			router.replace(`/posts/${initialPostData.id}`);
-		} else {
-			const post = { authorId: userId, title, content, attachedImageNames };
-			const postId = await createPost(post);
-
-			revalidatePath("/");
-			router.replace(`/posts/${postId}`);
-		}
+		revalidatePath("/");
+		router.replace(`/posts/${postId}`);
 	}
 
 	return (

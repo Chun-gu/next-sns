@@ -1,5 +1,4 @@
 import {
-	addDoc,
 	doc,
 	getDoc,
 	getDocs,
@@ -9,57 +8,64 @@ import {
 	deleteDoc,
 	collection,
 	updateDoc,
+	query,
 } from "firebase/firestore";
 
-import { CreatePostDTO, GetPostDTO, UpdatePostDTO } from "@/resources/post";
+import {
+	CreatePostReqDTO,
+	GetPostResDTO,
+	UpdatePostReqDTO,
+} from "@/resources/post";
 import { firebaseDB } from "@/shared/config/firebase";
 
 import { getUserById, userDocRef } from "./user";
 
 import type {
 	Post,
-	PostRes,
-	CreatePostArg,
-	UpdatePostArg,
+	GetPostRes,
+	CreatePostParam,
+	UpdatePostParam,
 } from "@/resources/post";
 
 // MARK: createPost
-export async function createPost(data: CreatePostArg): Promise<Post["id"]> {
-	const post = new CreatePostDTO(data).toPlainObj();
+// POST /posts
+export async function createPost(param: CreatePostParam): Promise<Post["id"]> {
+	const post = new CreatePostReqDTO(param).toPlainObj();
 
 	await setDoc(postDocRef(post.id), {
 		...post,
-		author: userDocRef(data.authorId),
+		author: userDocRef(param.authorId),
 	});
 
 	return post.id;
 }
 
 // MARK: getPost
+// GET /posts/post-id
 export async function getPost(id: Post["id"]): Promise<Post | null> {
-	try {
-		const postDoc = await getDoc(postDocRef(id));
+	const postDoc = await getDoc(postDocRef(id));
 
-		if (postDoc.exists() === false) throw new Error();
+	if (postDoc.exists() === false) throw new Error("존재하지 않는 게시글");
 
-		const post = new GetPostDTO(postDoc.data() as PostRes).toPlainObj();
-		post.author = await getUserById(post.author.id);
+	const post = new GetPostResDTO(postDoc.data() as GetPostRes).toPlainObj();
+	post.author = await getUserById(post.author.id);
 
-		return post;
-	} catch (error) {
-		return null;
-	}
+	return post;
 }
 
 // MARK: getPosts
+// GET /posts
 export async function getPosts(): Promise<Array<Post>> {
 	// TODO: 무한 스크롤 적용
-	// const q = query(collection(firebaseDB, "post"),orderBy('createdAt'),limit(20));
-	// const postDocs = await getDocs(q);
-	const postDocs = await getDocs(postCollectionRef());
+	const postsQuery = query(
+		postColRef(),
+		orderBy("createdAt", "desc"),
+		limit(20),
+	);
+	const postDocs = await getDocs(postsQuery);
 
 	const postPromises = postDocs.docs.map(async (postDoc) => {
-		const post = new GetPostDTO(postDoc.data() as PostRes).toPlainObj();
+		const post = new GetPostResDTO(postDoc.data() as GetPostRes).toPlainObj();
 		post.author = await getUserById(post.author.id);
 
 		return post;
@@ -75,22 +81,24 @@ export async function getPosts(): Promise<Array<Post>> {
 }
 
 // MARK: updatePost
-export async function updatePost(data: UpdatePostArg): Promise<void> {
+// PATCH /posts/post-id
+export async function updatePost(param: UpdatePostParam): Promise<void> {
 	await updateDoc(
-		postDocRef(data.postId),
-		new UpdatePostDTO(data).toPlainObj(),
+		postDocRef(param.postId),
+		new UpdatePostReqDTO(param).toPlainObj(),
 	);
 }
 
 // MARK: deletePost
+// DELETE /posts/post-id
 export async function deletePost(id: Post["id"]): Promise<void> {
 	await deleteDoc(postDocRef(id));
 }
 
-function postDocRef(id: Post["id"]) {
+export function postDocRef(id: Post["id"]) {
 	return doc(firebaseDB, "post", id);
 }
 
-function postCollectionRef() {
+export function postColRef() {
 	return collection(firebaseDB, "post");
 }

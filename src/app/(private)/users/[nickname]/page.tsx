@@ -14,7 +14,7 @@ export default async function UserPage({ params }: UserPageProps) {
 
 	return (
 		<main>
-			<h1>사용자 정보</h1>
+			<h1 className="font-extrabold text-3xl my-4">사용자 정보</h1>
 			<Image
 				src={await getImageURL(profileImageName)}
 				alt={nickname}

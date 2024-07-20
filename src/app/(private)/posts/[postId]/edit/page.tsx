@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 
-import { PostForm } from "@/components/post";
+import { PostUpdateForm } from "@/components/post";
 import { getCurrentUser } from "@/features/auth";
 import { getPost } from "@/features/post";
 
@@ -23,7 +23,7 @@ export default async function PostEditPage({
 		<>
 			<h1 className="font-extrabold text-3xl my-4">게시글 수정</h1>
 
-			<PostForm userId={user.id} initialPostData={post} />
+			<PostUpdateForm initialPostData={post} />
 		</>
 	);
 }

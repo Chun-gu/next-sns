@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { PostForm } from "@/components/post";
+import { PostCreateForm } from "@/components/post";
 import { getCurrentUser } from "@/features/auth";
 
 export default async function PostCreatePage() {
@@ -12,7 +12,7 @@ export default async function PostCreatePage() {
 		<>
 			<h1 className="font-extrabold text-3xl my-4">게시글 작성하기</h1>
 
-			<PostForm userId={user.id} />
+			<PostCreateForm userId={user.id} />
 		</>
 	);
 }

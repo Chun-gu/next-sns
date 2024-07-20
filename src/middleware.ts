@@ -10,6 +10,11 @@ import { firebaseConfig } from "@/shared/config/firebase";
 const PUBLIC_PATHS = ["/register", "/login"];
 
 export async function middleware(request: NextRequest) {
+	if (request.nextUrl.pathname === "/") {
+		const url = request.nextUrl.clone();
+		url.pathname = "/posts";
+		return NextResponse.redirect(url);
+	}
 	return authMiddleware(request, {
 		loginPath: "/api/login",
 		logoutPath: "/api/logout",
@@ -50,7 +55,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
 	matcher: [
 		"/",
-		"/((?!_next|favicon.ico|api|.*\\.).*)",
+		"/((?!api|_next/static|_next/image|favicon.ico).*)",
 		"/api/login",
 		"/api/logout",
 	],
