@@ -104,11 +104,6 @@ pnpm dev
  ┃ ┃ ┃ ┃ ┣ 📜layout.tsx
  ┃ ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┃ ┗ 📜layout.tsx
- ┃ ┃ ┣ 📂_@modal
- ┃ ┃ ┃ ┣ 📂(.)posts
- ┃ ┃ ┃ ┃ ┗ 📂[postId]
- ┃ ┃ ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┃ ┗ 📜default.tsx
  ┃ ┃ ┗ 📜layout.tsx
  ┃ ┣ 📂(public)
  ┃ ┃ ┣ 📂login
@@ -116,21 +111,6 @@ pnpm dev
  ┃ ┃ ┣ 📂register
  ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┗ 📜layout.tsx
- ┃ ┣ 📂api
- ┃ ┃ ┣ 📂posts
- ┃ ┃ ┃ ┣ 📂[postId]
- ┃ ┃ ┃ ┃ ┣ 📂comments
- ┃ ┃ ┃ ┃ ┃ ┣ 📂[commentId]
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜route.ts
- ┃ ┃ ┃ ┃ ┃ ┗ 📜route.ts
- ┃ ┃ ┃ ┃ ┗ 📜route.ts
- ┃ ┃ ┃ ┗ 📜route.ts
- ┃ ┃ ┗ 📂users
- ┃ ┃ ┃ ┣ 📂me
- ┃ ┃ ┃ ┃ ┗ 📜route.ts
- ┃ ┃ ┃ ┣ 📂[userId]
- ┃ ┃ ┃ ┃ ┗ 📜route.ts
- ┃ ┃ ┃ ┗ 📜route.ts
  ┃ ┣ 📜favicon.ico
  ┃ ┣ 📜globals.css
  ┃ ┗ 📜layout.tsx
@@ -176,11 +156,7 @@ pnpm dev
  ┃ ┃ ┗ 📜index.ts
  ┃ ┣ 📂user
  ┃ ┃ ┗ 📜index.ts
- ┃ ┣ 📜auth.ts
- ┃ ┣ 📜comment.ts
- ┃ ┣ 📜image.ts
- ┃ ┣ 📜post.ts
- ┃ ┗ 📜user.ts
+ ┃ ┗ 📜auth.ts
  ┣ 📂repositories
  ┃ ┣ 📂post
  ┃ ┃ ┣ 📜firebase.ts
@@ -209,9 +185,6 @@ pnpm dev
  ┃ ┃ ┣ 📜api.ts
  ┃ ┃ ┣ 📜index.ts
  ┃ ┃ ┗ 📜model.ts
- ┃ ┣ 📜comment.ts
- ┃ ┣ 📜post.ts
- ┃ ┗ 📜user.ts
  ┣ 📂services
  ┃ ┣ 📜post.ts
  ┃ ┗ 📜user.ts
