@@ -73,7 +73,9 @@ pnpm dev
 
 ## 의사결정 과정
 
-###
+- 디자인 최적화
+- 트러블 슈팅
+- 성능 최적화
 
 ## 아키텍쳐
 
@@ -84,123 +86,40 @@ pnpm dev
  ┣ 📂app
  ┃ ┣ 📂(private)
  ┃ ┃ ┣ 📂chats
- ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┣ 📂feeds
- ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┣ 📂posts
  ┃ ┃ ┃ ┣ 📂new
- ┃ ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┃ ┣ 📂[postId]
  ┃ ┃ ┃ ┃ ┣ 📂edit
- ┃ ┃ ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┃ ┃ ┣ 📜not-found.tsx
- ┃ ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┃ ┣ 📜loading.tsx
- ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┣ 📂users
  ┃ ┃ ┃ ┣ 📂me
- ┃ ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┃ ┣ 📂[nickname]
- ┃ ┃ ┃ ┃ ┣ 📜layout.tsx
- ┃ ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┃ ┗ 📜layout.tsx
- ┃ ┃ ┗ 📜layout.tsx
  ┃ ┣ 📂(public)
  ┃ ┃ ┣ 📂login
- ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┣ 📂register
- ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┗ 📜layout.tsx
- ┃ ┣ 📜favicon.ico
- ┃ ┣ 📜globals.css
- ┃ ┗ 📜layout.tsx
  ┣ 📂components
  ┃ ┣ 📂auth
- ┃ ┃ ┣ 📜auth-context.ts
- ┃ ┃ ┣ 📜auth-provider.tsx
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┣ 📜sign-in-form.tsx
- ┃ ┃ ┣ 📜sign-in-google-button.tsx
- ┃ ┃ ┣ 📜sign-out-button.tsx
- ┃ ┃ ┗ 📜sign-up-form.tsx
  ┃ ┣ 📂comment
- ┃ ┃ ┣ 📜comment-card.tsx
- ┃ ┃ ┣ 📜comment-create-form.tsx
- ┃ ┃ ┣ 📜comment-list-item.tsx
- ┃ ┃ ┣ 📜comment-list.tsx
- ┃ ┃ ┣ 📜comment-update-form.tsx
- ┃ ┃ ┗ 📜index.ts
  ┃ ┣ 📂image
- ┃ ┃ ┣ 📜image-upload-preview.tsx
- ┃ ┃ ┗ 📜image-uploader.tsx
  ┃ ┣ 📂post
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┣ 📜link-to-create-post.tsx
- ┃ ┃ ┣ 📜post-card.tsx
- ┃ ┃ ┣ 📜post-create-form.tsx
- ┃ ┃ ┣ 📜post-detail.tsx
- ┃ ┃ ┣ 📜post-list-item.tsx
- ┃ ┃ ┣ 📜post-list.tsx
- ┃ ┃ ┗ 📜post-update-form.tsx
- ┃ ┗ 📜header.tsx
  ┣ 📂features
  ┃ ┣ 📂comment
- ┃ ┃ ┣ 📜create-comment.ts
- ┃ ┃ ┣ 📜delete-comment.ts
- ┃ ┃ ┣ 📜get-comment.ts
- ┃ ┃ ┣ 📜types.ts
- ┃ ┃ ┗ 📜update-comment.ts
  ┃ ┣ 📂image
- ┃ ┃ ┗ 📜index.ts
  ┃ ┣ 📂post
- ┃ ┃ ┗ 📜index.ts
  ┃ ┣ 📂user
- ┃ ┃ ┗ 📜index.ts
- ┃ ┗ 📜auth.ts
  ┣ 📂repositories
  ┃ ┣ 📂post
- ┃ ┃ ┣ 📜firebase.ts
- ┃ ┃ ┗ 📜index.ts
  ┃ ┗ 📂user
- ┃ ┃ ┣ 📜firebase.ts
- ┃ ┃ ┗ 📜index.ts
  ┣ 📂resources
  ┃ ┣ 📂chat
- ┃ ┃ ┣ 📜api.ts
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┗ 📜model.ts
  ┃ ┣ 📂comment
- ┃ ┃ ┣ 📜api.ts
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┗ 📜model.ts
  ┃ ┣ 📂image
- ┃ ┃ ┣ 📜api.ts
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┗ 📜model.ts
  ┃ ┣ 📂post
- ┃ ┃ ┣ 📜api.ts
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┗ 📜model.ts
  ┃ ┣ 📂user
- ┃ ┃ ┣ 📜api.ts
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┗ 📜model.ts
  ┣ 📂services
- ┃ ┣ 📜post.ts
- ┃ ┗ 📜user.ts
  ┣ 📂shared
  ┃ ┣ 📂config
- ┃ ┃ ┣ 📜firebase.ts
- ┃ ┃ ┗ 📜route.ts
  ┃ ┣ 📂lib
- ┃ ┃ ┣ 📜action.ts
- ┃ ┃ ┣ 📜api.ts
- ┃ ┃ ┣ 📜date.ts
- ┃ ┃ ┣ 📜error.ts
- ┃ ┃ ┣ 📜type.ts
- ┃ ┃ ┗ 📜use-debounce.ts
  ┃ ┗ 📂ui
- ┃ ┃ ┣ 📜dialog.tsx
- ┃ ┃ ┗ 📜index.ts
  ┗ 📜middleware.ts
 ```

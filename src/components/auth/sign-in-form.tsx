@@ -38,7 +38,7 @@ export function SignInForm() {
 					id="email"
 					name="email"
 					required
-					className="border"
+					className="border text-black"
 				/>
 			</div>
 			<div className="flex flex-col">

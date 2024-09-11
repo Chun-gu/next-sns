@@ -4,6 +4,7 @@ import { getTokens } from "@/features/auth";
 
 import { SignOutButton } from "./auth/sign-out-button";
 import type { ComponentProps } from "react";
+import { UserProfileMenu } from "./user/user-profile-menu";
 
 type HeaderProps = ComponentProps<"header">;
 
@@ -18,6 +19,7 @@ export async function Header({ className }: HeaderProps) {
 			</Link>
 
 			{isSignedIn && <SignOutButton />}
+			<UserProfileMenu />
 		</header>
 	);
 }

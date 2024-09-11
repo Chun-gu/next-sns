@@ -7,7 +7,7 @@ import type { ComponentPropsWithRef } from "react";
 
 type DialogProps = ComponentPropsWithRef<"dialog">;
 
-export function Dialog({ children, ...restProps }: DialogProps) {
+export function Dialog({ children, ...props }: DialogProps) {
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const router = useRouter();
 
@@ -16,7 +16,7 @@ export function Dialog({ children, ...restProps }: DialogProps) {
 	}
 
 	function handleCloseDialog() {
-		setTimeout(() => router.back(), 1000);
+		router.back();
 		// dialogRef.current?.close();
 	}
 
@@ -35,7 +35,7 @@ export function Dialog({ children, ...restProps }: DialogProps) {
 	});
 
 	return (
-		<dialog ref={dialogRef} {...restProps}>
+		<dialog ref={dialogRef} {...props}>
 			{children}
 			<button onClick={handleCloseDialog}>닫기</button>
 		</dialog>

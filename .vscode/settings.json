@@ -1,0 +1,7 @@
+{
+	"editor.colorDecorators": true,
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"editor.colorDecoratorsActivatedOn": "click"
+}

@@ -40,7 +40,7 @@ export class FirebasePostRepository implements IPostRepository {
 		return post.id;
 	}
 
-	async getPost(id: Post["id"]): Promise<Post | null> {
+	async getPostById(id: Post["id"]): Promise<Post | null> {
 		const postDoc = await getDoc(postDocRef(id));
 
 		if (postDoc.exists() === false) throw new Error("존재하지 않는 게시글");
@@ -51,7 +51,7 @@ export class FirebasePostRepository implements IPostRepository {
 		return post;
 	}
 
-	async getPosts(): Promise<Array<Post>> {
+	async getPostList(): Promise<Array<Post>> {
 		// TODO: 무한 스크롤 적용
 		const postsQuery = query(
 			postColRef(),

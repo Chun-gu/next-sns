@@ -11,11 +11,11 @@ class PostService {
 	}
 
 	async getPost(id: Post["id"]): Promise<Post | null> {
-		return this.postRepository.getPost(id);
+		return this.postRepository.getPostById(id);
 	}
 
 	async getPosts(): Promise<Array<Post>> {
-		return this.postRepository.getPosts();
+		return this.postRepository.getPostList();
 	}
 
 	async updatePost(param: UpdatePostParam): Promise<void> {

@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import type { User } from "@/resources/user";
 
 export type AuthProviderProps = {
-	user: User | null;
+	user: User;
 	children: ReactNode;
 };
 

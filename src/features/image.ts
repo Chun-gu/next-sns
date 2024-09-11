@@ -27,8 +27,8 @@ export async function createImage(imageFile: File): Promise<ImageName> {
 	return snapshot.metadata.name;
 }
 
-export async function getImageURL(imageName: ImageName): Promise<ImageName> {
-	return await getDownloadURL(imageStorage(imageName));
+export function getImageURL(imageName: ImageName): Promise<ImageName> {
+	return getDownloadURL(imageStorage(imageName));
 }
 
 export async function deleteImage(imageName: ImageName) {
